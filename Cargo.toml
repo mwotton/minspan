@@ -4,7 +4,6 @@ version = "0.1.0"
 edition = "2018"
 description = "a package for determining the minimum span of one vector within another"
 license = "MIT"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+repository = "https://github.com/mwotton/minspan"
 
 [dependencies]
