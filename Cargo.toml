@@ -1,6 +1,6 @@
 [package]
 name = "minspan"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2018"
 description = "a package for determining the minimum span of one vector within another"
 license = "MIT"
