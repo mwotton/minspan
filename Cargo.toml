@@ -9,4 +9,4 @@ repository = "https://github.com/mwotton/minspan"
 [dependencies]
 
 [dev-dependencies]
-proptest = "1.0"
+proptest = "1.6"
