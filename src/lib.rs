@@ -14,7 +14,7 @@ pub mod minspan {
         }
 
         for (bodyindex, bodychr) in history.iter().enumerate() {
-            for (keyindex, keychr) in query.iter().enumerate() {
+            for (keyindex, keychr) in query.iter().enumerate().rev() {
                 if keychr == bodychr {
                     // we have a match, therefore record it: it ends at bodyindex,
                     // and by construction, starts at starting_at[0]
@@ -22,26 +22,22 @@ pub mod minspan {
                         // we got nothing yet! set to beginning
                         Some((bodyindex, bodyindex))
                     } else {
-                        match starting_at[keyindex - 1] {
-                            // no continuation to be had anyway, might as well break
-                            None => break,
-                            Some((start, _end)) => Some((start, bodyindex)),
-                        }
+                        starting_at[keyindex - 1].map(|(start, _end)| (start, bodyindex))
                     };
                     // are we finished?
                     if (keyindex + 1) == query.len() {
-                        best_complete_solution =
-                            match (best_complete_solution, starting_at[keyindex]) {
-                                (None, Some((from, to))) => Some((from, to)), // 1+to - from),
-                                (Some((currfrom, currto)), Some((from, to))) => {
+                        if let Some((from, to)) = starting_at[keyindex] {
+                            best_complete_solution = match best_complete_solution {
+                                None => Some((from, to)), // 1+to - from),
+                                Some((currfrom, currto)) => {
                                     Some(if to - from < currto - currfrom {
                                         (from, to)
                                     } else {
                                         (currfrom, currto)
                                     })
                                 }
-                                (_, None) => panic!("this should be impossible"),
                             }
+                        }
                     }
                 }
             }
@@ -71,5 +67,7 @@ mod tests {
         assert_eq!(wrapper("curl", "curly").unwrap(), 4);
         assert_eq!(wrapper("curl", "acccccurlycurrelly").unwrap(), 4);
         assert_eq!(wrapper("z", "acccccurlycurrelly"), None);
+        assert_eq!(wrapper("ssh", "testssh"), Some(3));
+        assert_eq!(wrapper("aba", "abababa"), Some(3));
     }
 }
